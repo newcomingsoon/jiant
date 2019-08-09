@@ -1,7 +1,9 @@
 """ Script for downloading all GLUE data.
 
 Example usage:
-    python download_glue_data.py --data_dir data --tasks all
+    python3 download_glue_data.py --data_dir data --tasks all [SSL] ERROR
+    use instead: pls download `msr_paraphrase_train.txt` and `msr_paraphrase_test.txt` file in $GLUE_DIR dir, and download 'dev_ids.tsv' file in $GLUE_DIR/MRPC first
+    python3 download_glue_data.py  format_mrpc $GLUE_DIR
 
 Note: for legal reasons, we are unable to host MRPC.
 You can either use the version hosted by the SentEval team, which is already tokenized,
@@ -20,7 +22,7 @@ rm MRPC/_*
 rm MSRParaphraseCorpus.msi
 
 """
-
+import fire
 import os
 import sys
 import shutil
@@ -73,11 +75,11 @@ def format_mrpc(data_dir, path_to_data):
         print("Local MRPC data not specified, downloading data from %s" % MRPC_TRAIN)
         mrpc_train_file = os.path.join(mrpc_dir, "msr_paraphrase_train.txt")
         mrpc_test_file = os.path.join(mrpc_dir, "msr_paraphrase_test.txt")
-        urllib.request.urlretrieve(MRPC_TRAIN, mrpc_train_file)
-        urllib.request.urlretrieve(MRPC_TEST, mrpc_test_file)
+        #urllib.request.urlretrieve(MRPC_TRAIN, mrpc_train_file)
+        #urllib.request.urlretrieve(MRPC_TEST, mrpc_test_file)
     assert os.path.isfile(mrpc_train_file), "Train data not found at %s" % mrpc_train_file
-    assert os.path.isfile(mrpc_test_file), "Test data not found at %s" % mrpc_test_file
-    urllib.request.urlretrieve(TASK2PATH["MRPC"], os.path.join(mrpc_dir, "dev_ids.tsv"))
+    #assert os.path.isfile(mrpc_test_file), "Test data not found at %s" % mrpc_test_file
+    #urllib.request.urlretrieve(TASK2PATH["MRPC"], os.path.join(mrpc_dir, "dev_ids.tsv"))
 
     dev_ids = []
     with open(os.path.join(mrpc_dir, "dev_ids.tsv"), encoding="utf8") as ids_fh:
@@ -169,4 +171,4 @@ def main(arguments):
 
 
 if __name__ == "__main__":
-    sys.exit(main(sys.argv[1:]))
+    fire.Fire()
